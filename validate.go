@@ -1,6 +1,7 @@
 package resolvers
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"reflect"
@@ -28,15 +29,22 @@ var validators = validateList{
 		return nil
 	},
 	func(h reflect.Type) error {
-		if num := h.NumIn(); num > 1 {
-			return fmt.Errorf("Resolver must not have more than one argument, got %v", num)
+		if num := h.NumIn(); num > 2 {
+			return fmt.Errorf("Resolver must not have more than two arguments, got %v", num)
 		}
 
 		return nil
 	},
 	func(h reflect.Type) error {
-		if h.NumIn() == 1 && h.In(0).Kind() != reflect.Struct {
-			return errors.New("Resolver argument must be struct")
+		if h.NumIn() == 2 && !h.In(0).Implements(reflect.TypeOf((*context.Context)(nil)).Elem()) {
+			return errors.New("Resolver takes two arguments, but the first argument is not Context")
+		}
+
+		return nil
+	},
+	func(h reflect.Type) error {
+		if h.NumIn() > 0 && h.In(h.NumIn()-1).Kind() != reflect.Struct {
+			return errors.New("Resolver payload argument must be a struct")
 		}
 
 		return nil

@@ -11,7 +11,7 @@ var _ = Describe("Invocation", func() {
 	Context("With Arguments", func() {
 		data := invocation{
 			Resolve: "exaple.resolver",
-			Context: context{
+			Context: appsyncContext{
 				Arguments: json.RawMessage(`{ "foo": "bar" }`),
 			},
 		}
@@ -28,7 +28,7 @@ var _ = Describe("Invocation", func() {
 	Context("With Source", func() {
 		data := invocation{
 			Resolve: "exaple.resolver",
-			Context: context{
+			Context: appsyncContext{
 				Source: json.RawMessage(`{ "bar": "foo" }`),
 			},
 		}

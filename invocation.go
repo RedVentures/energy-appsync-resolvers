@@ -2,14 +2,14 @@ package resolvers
 
 import "encoding/json"
 
-type context struct {
+type appsyncContext struct {
 	Arguments json.RawMessage `json:"arguments"`
 	Source    json.RawMessage `json:"source"`
 }
 
 type invocation struct {
-	Resolve string  `json:"resolve"`
-	Context context `json:"context"`
+	Resolve string         `json:"resolve"`
+	Context appsyncContext `json:"context"`
 }
 
 func (in invocation) isRoot() bool {

@@ -1,6 +1,7 @@
 package resolvers
 
 import (
+	"context"
 	"reflect"
 
 	. "github.com/onsi/ginkgo"
@@ -21,8 +22,10 @@ var _ = Describe("Resolver", func() {
 		Entry("Not a function, but integer", 1234, "Resolver is not a function, got int"),
 		Entry("Not a function, but string", "123", "Resolver is not a function, got string"),
 
-		Entry("Parameter is string", func(args string) (interface{}, error) { return nil, nil }, "Resolver argument must be struct"),
-		Entry("Too many parameters", func(args struct{}, foo struct{}) (interface{}, error) { return nil, nil }, "Resolver must not have more than one argument, got 2"),
+		Entry("Parameter is string", func(args string) (interface{}, error) { return nil, nil }, "Resolver payload argument must be a struct"),
+		Entry("Too many parameters", func(args struct{}, foo struct{}, bar struct{}) (interface{}, error) { return nil, nil }, "Resolver must not have more than two arguments, got 3"),
+		Entry("Parameter is Context", func(ctx context.Context) (interface{}, error) { return nil, nil }, "Resolver payload argument must be a struct"),
+		Entry("Two parameters and first isn't context", func(args struct{}, foo struct{}) (interface{}, error) { return nil, nil }, "Resolver takes two arguments, but the first argument is not Context"),
 
 		Entry("No return value", func() {}, "Resolver must have at least one return value"),
 		Entry("Non-error return value", func(args struct{}) interface{} { return nil }, "Last return value must be an error"),
@@ -35,8 +38,10 @@ var _ = Describe("Resolver", func() {
 			Expect(validators.run(reflect.TypeOf(r))).NotTo(HaveOccurred())
 		},
 
-		Entry("With parameter and multiple return values", func(args struct{}) (interface{}, error) { return nil, nil }),
-		Entry("With parameter and single return value", func(args struct{}) error { return nil }),
+		Entry("With payload and multiple return values", func(args struct{}) (interface{}, error) { return nil, nil }),
+		Entry("With payload and single return value", func(args struct{}) error { return nil }),
+		Entry("With payload and context and multiple return values", func(ctx context.Context, args struct{}) (interface{}, error) { return nil, nil }),
+		Entry("With payload and context and single return value", func(ctx context.Context, args struct{}) error { return nil }),
 		Entry("Without parameter, but multiple return values", func() (interface{}, error) { return nil, nil }),
 		Entry("Without parameter, but single return value", func() error { return nil }),
 	)

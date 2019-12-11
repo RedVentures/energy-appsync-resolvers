@@ -23,8 +23,8 @@ var _ = Describe("Payload", func() {
 			Expect(err).To(HaveOccurred())
 		})
 
-		It("should return nil", func() {
-			Expect(args).To(BeNil())
+		It("should not return nil", func() {
+			Expect(args).NotTo(BeNil())
 		})
 	})
 
@@ -36,19 +36,18 @@ var _ = Describe("Payload", func() {
 			return nil
 		}}
 
-		args, err := message.parse(reflect.TypeOf(example.function).In(0))
+		arg, err := message.parse(reflect.TypeOf(example.function).In(0))
 
 		It("should not error", func() {
 			Expect(err).NotTo(HaveOccurred())
 		})
 
 		It("should return struct", func() {
-			Expect(args).NotTo(BeNil())
+			Expect(arg).NotTo(BeNil())
 		})
 
 		It("should parse data", func() {
-			Expect(args).To(HaveLen(1))
-			Expect(args[0].FieldByName("Name").String()).To(Equal("example"))
+			Expect(arg.FieldByName("Name").String()).To(Equal("example"))
 		})
 	})
 })
