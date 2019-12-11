@@ -2,8 +2,6 @@ module github.com/acburdine/appsync-resolvers
 
 go 1.13
 
-replace gopkg.in/fsnotify.v1 v1.4.7 => github.com/fsnotify/fsnotify v1.4.7
-
 require (
 	github.com/fsnotify/fsnotify v1.4.7 // indirect
 	github.com/golang/protobuf v1.3.2 // indirect
